@@ -44,3 +44,21 @@ class SelectTest < MiniTest::Test
     assert_equal [], T.select.(->(x) { x == 1 }, [])
   end
 end
+
+class ReverseTest < MiniTest::Test
+  def test_zero_length_array
+    assert_equal [], T.reverse.([])
+  end
+
+  def test_array_with_one_element
+    assert_equal [1], T.reverse.([1])
+  end
+
+  def test_array_with_two_elements
+    assert_equal [2, 1], T.reverse.([1, 2])
+  end
+
+  def test_array_with_three_elements
+    assert_equal [3, 2, 1], T.reverse.([1, 2, 3])
+  end
+end

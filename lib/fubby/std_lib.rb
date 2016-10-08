@@ -80,12 +80,8 @@ module StdLib
 
   # reverse :: [a] -> [a]
   def reverse
-    ->(array) {
-      if array.empty? || length.(array) == 1
-        array
-      else
-        add.(reverse.(array[1..-1]), array[0])
-      end
+    ->(x) {
+      x == [] || length.(x) == 1 ? x : A.concat.(reverse.(x[1..-1]), [head.(x)])
     }
   end
 
