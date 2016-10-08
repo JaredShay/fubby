@@ -12,6 +12,6 @@ Gem::Specification.new do |gem|
   gem.version       = '0.0.0'
   gem.license       = 'MIT'
 
-  gem.add_development_dependency 'miniest'
+  gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'minitest-reporters'
 end

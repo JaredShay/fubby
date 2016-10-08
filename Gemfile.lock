@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    fubby (0.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -15,8 +20,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  fubby!
   minitest
   minitest-reporters
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
