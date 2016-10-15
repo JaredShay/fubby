@@ -69,42 +69,42 @@ module Test
   end
 
   class ReduceTest < MiniTest::Test
-    def test_reducing_a_zero_element_array_with_no_memo
-      assert_equal nil, T.reduce.(nil, ->(x, y) { x + y }, [])
+    def test_reducing_a_zero_length_array
+      assert_raises(NoMethodError) { T.reduce.(->(x) { x  }, []) }
     end
 
-    def test_reducing_a_zero_element_array_with_a_memo
-      assert_equal 'memo', T.reduce.('memo', ->(x, y) { x + y }, [])
+    def test_reducing_an_array_of_length_one
+      assert_equal 1, T.reduce.(->(x, _) { x }, [1])
     end
 
-    def test_reducing_a_one_element_array_with_no_memo
-      assert_equal 1, T.reduce.(nil, ->(x, y) { x + y }, [1])
+    def test_reducing_an_array_of_length_two
+      assert_equal 3, T.reduce.(->(x, y) { x + y }, [1, 2])
     end
 
-    def test_reducing_a_one_element_array_with_a_memo
-      assert_equal 2, T.reduce.(1, ->(x, y) { x + y }, [1])
-    end
-
-    def test_reducing_a_two_element_array_with_no_memo
-      assert_equal 3, T.reduce.(nil, ->(x, y) { x + y }, [1, 2])
-    end
-
-    def test_reducing_a_two_element_array_with_a_memo
-      assert_equal 6, T.reduce.(1, ->(x, y) { x + y }, [2, 3])
-    end
-
-    def test_reducing_a_three_element_array_with_no_memo
-      assert_equal 6, T.reduce.(nil, ->(x, y) { x + y }, [1, 2, 3])
-    end
-
-    def test_reducing_a_three_element_array_with_a_memo
-      assert_equal 10, T.reduce.(1, ->(x, y) { x + y }, [2, 3, 4])
-    end
-
-    def test_currying
-      sum = T.reduce.(nil, ->(x, y) { x + y })
+    def test_currying_the_reduce_function
+      sum = T.reduce.(->(x, y) { x + y })
 
       assert_equal 6, sum.([1, 2, 3])
+    end
+  end
+
+  class FoldTest < MiniTest::Test
+    def test_folding_a_zero_length_array
+      assert_equal 'acc', T.fold.('acc', ->(x, _) { x }, [])
+    end
+
+    def test_folding_an_array_of_length_one
+      assert_equal 1, T.fold.(0, ->(x, y) { x + y }, [1])
+    end
+
+    def test_folding_an_array_of_length_two
+      assert_equal 4, T.fold.(1, ->(x, y) { x + y }, [1, 2])
+    end
+
+    def test_currying_the_fold_function
+      sum = T.fold.(0, ->(x, y) { x + y })
+
+      assert_equal 4, sum.([2, 2])
     end
   end
 

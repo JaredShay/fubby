@@ -21,21 +21,21 @@ module Core
     }
   end
 
-  # reduce :: a, (b -> a), [b] -> a
+  # reduce :: (b -> a), [b] -> a
   def reduce
-    curry.(->(memo, f, array) {
-      if memo == nil
-        case array.length
-        when 0 then nil
-        when 1 then array[0]
-        else reduce.(f.(array[0], array[1]), f, array[2..-1])
-        end
-      else
-        case array.length
-        when 0 then memo
-        else reduce.(f.(memo, array[0]), f, array[1..-1])
-        end
-      end
+    _reduce = ->(acc, f, array){
+      array == [] ? acc : _reduce.(f.(acc, array[0]), f, array[1..-1])
+    }
+
+    curry.(->(f, array) {
+      _reduce.(array[0], f, array[1..-1])
+    })
+  end
+
+  # fold :: a, (b -> a), [b] -> a
+  def fold
+    curry.(->(acc, f, array) {
+      array == [] ? acc : reduce.(f, [acc] + array)
     })
   end
 
