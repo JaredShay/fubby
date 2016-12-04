@@ -1,5 +1,5 @@
-require_relative '../test_helper.rb'
-require_relative '../../lib/fubby/core.rb'
+require_relative './test_helper.rb'
+require_relative './../lib/fubby/core.rb'
 
 class T
   extend Core
@@ -70,7 +70,7 @@ module Test
 
   class ReduceTest < MiniTest::Test
     def test_reducing_a_zero_length_array
-      assert_raises(NoMethodError) { T.reduce.(->(x) { x  }, []) }
+      assert_raises(NoMethodError) { T.reduce.(->(x) { x }, []) }
     end
 
     def test_reducing_an_array_of_length_one

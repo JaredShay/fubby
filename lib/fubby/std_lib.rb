@@ -11,7 +11,7 @@ module StdLib
   # length :: [a] -> Number
   def length
     ->(x) {
-      C.reduce.(0, ->(memo, _) { memo + 1 }, x)
+      C.fold.(0, ->(memo, _) { memo + 1 }, x)
     }
   end
 
@@ -23,7 +23,7 @@ module StdLib
           A.concat.(memo, [f.(x)])
         }
 
-        C.reduce.([], fx, x)
+        C.fold.([], fx, x)
       }
     )
   end
@@ -36,7 +36,7 @@ module StdLib
           f.(x) == true ? A.concat.(memo, [x]) : memo
         }
 
-        C.reduce.([], fx, x)
+        C.fold.([], fx, x)
       }
     )
   end
@@ -54,7 +54,7 @@ module StdLib
           f.(x) ? true : memo
         }
 
-        C.reduce.(fx, x, false)
+        C.fold.(fx, x, false)
       }
     )
   end
@@ -81,7 +81,7 @@ module StdLib
   # reverse :: [a] -> [a]
   def reverse
     ->(x) {
-      x == [] || length.(x) == 1 ? x : A.concat.(reverse.(x[1..-1]), [head.(x)])
+      length.(x) <= 1 ? x : A.concat.(reverse.(x[1..-1]), [head.(x)])
     }
   end
 

@@ -1,5 +1,5 @@
-require_relative '../test_helper.rb'
-require_relative '../../lib/fubby/std_lib.rb'
+require_relative './test_helper.rb'
+require_relative './../lib/fubby/std_lib.rb'
 
 class T
   extend StdLib
