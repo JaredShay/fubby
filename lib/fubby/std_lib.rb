@@ -68,11 +68,6 @@ module StdLib
     )
   end
 
-  # add :: Int -> Int -> Int
-  def add
-    ->(x, y) { x + y }
-  end
-
   # head :: [a] -> a
   def head
     ->(x) { x[0] }
