@@ -10,20 +10,20 @@ module StdLib
 
   # length :: [a] -> Number
   def length
-    ->(x) {
-      C.fold.(0, ->(memo, _) { memo + 1 }, x)
+    ->(xs) {
+      C.fold.(0, ->(acc, _) { acc + 1 }, xs)
     }
   end
 
   # map :: (a -> b) -> [a] -> [b]
   def map
     C.curry.(
-      ->(f, x) {
-        fx = ->(memo, x) {
-          A.concat.(memo, [f.(x)])
+      ->(f, xs) {
+        _f = ->(acc, x) {
+          A.concat.(acc, [f.(x)])
         }
 
-        C.fold.([], fx, x)
+        C.fold.([], _f, xs)
       }
     )
   end
@@ -31,30 +31,30 @@ module StdLib
   # select :: (a -> Bool) -> [a] -> [a]
   def select
     C.curry.(
-      ->(f, x) {
-        fx = ->(memo, x) {
-          f.(x) == true ? A.concat.(memo, [x]) : memo
+      ->(f, xs) {
+        _f = ->(acc, x) {
+          f.(x) == true ? A.concat.(acc, [x]) : acc
         }
 
-        C.fold.([], fx, x)
+        C.fold.([], _f, xs)
       }
     )
   end
 
   # reject :: (a -> Bool) -> [a] -> [a]
   def reject
-    C.curry.(->(f, x) { x - select.(f, x) })
+    C.curry.(->(f, xs) { xs - select.(f, xs) })
   end
 
   # any :: (a -> Bool) -> Bool
   def any
     C.curry.(
-      ->(f, x) {
-        fx = ->(memo, x) {
-          f.(x) ? true : memo
+      ->(f, xs) {
+        _f = ->(acc, x) {
+          f.(x) ? true : acc
         }
 
-        C.fold.(fx, x, false)
+        C.fold.(_f, xs, false)
       }
     )
   end
@@ -62,43 +62,26 @@ module StdLib
   # any :: (a -> Bool) -> Bool
   def f_all
     C.curry.(
-      ->(f, x) {
-        !any.(->(x) { x == false }, map.(f, x))
+      ->(f, xs) {
+        !any.(->(x) { x == false }, map.(f, xs))
       }
     )
   end
 
   # head :: [a] -> a
   def head
-    ->(x) { x[0] }
+    ->(xs) { xs[0] }
   end
 
   # reverse :: [a] -> [a]
   def reverse
-    ->(x) {
-      length.(x) <= 1 ? x : A.concat.(reverse.(x[1..-1]), [head.(x)])
+    ->(xs) {
+      length.(xs) <= 1 ? xs : A.concat.(reverse.(xs[1..-1]), [head.(xs)])
     }
   end
 
   # tail :: [a] -> a
   def tail
     C.compose.(head, reverse)
-  end
-
-  # TODO: figure out how to handle Strings and Chars
-  def str_head
-    ->(x) { x[0] }
-  end
-
-  # TODO implement this without `downcase`
-  # downcase :: String -> String
-  def downcase
-    ->(x) { x.downcase }
-  end
-
-  # TODO implement this without `capitalize`
-  # downcase :: String -> String
-  def upcase
-    ->(x) { x.capitalize }
   end
 end

@@ -15,47 +15,50 @@ module Core
     }
 
     ->(f) {
-      ->(*x) {
-        f.arity == x.length ? f.(*x) : _curry.(f, *x)
+      ->(*xs) {
+        f.arity == xs.length ? f.(*xs) : _curry.(f, *xs)
       }
     }
   end
 
   # reduce :: (b -> a), [b] -> a
   def reduce
-    _reduce = ->(acc, f, array){
-      array == [] ? acc : _reduce.(f.(acc, array[0]), f, array[1..-1])
+    _reduce = ->(acc, f, xs){
+      xs == [] ? acc : _reduce.(f.(acc, xs[0]), f, xs[1..-1])
     }
 
-    curry.(->(f, array) {
-      _reduce.(array[0], f, array[1..-1])
+    curry.(->(f, xs) {
+      _reduce.(xs[0], f, xs[1..-1])
     })
   end
 
   # fold :: a, (b -> a), [b] -> a
   def fold
-    curry.(->(acc, f, array) {
-      array == [] ? acc : reduce.(f, [acc] + array)
+    curry.(->(acc, f, xs) {
+      xs == [] ? acc : reduce.(f, [acc] + xs)
     })
   end
 
-  # TODO: figure out how to notate many args. [f] isn't correct here.
-  # compose :: [f] -> (a -> b)
+  # compose :: [(a -> b)] -> (a -> b)
   def compose
-    ->(*f) {
-      _compose = ->(x, *f) {
-        f.length == 1 ? f[0].(x) : f[0].(_compose.(x, *f[1..-1]))
+    ->(*fs) {
+      _compose = ->(x, *fs) {
+        fs.length == 1 ? fs[0].(x) : fs[0].(_compose.(x, *fs[1..-1]))
       }
 
-      ->(x) { _compose.(x, *f) }
+      ->(x) { _compose.(x, *fs) }
     }
   end
 
   # flip :: (a -> b) -> (a -> b)
   def flip
     ->(f) {
+      _reverse = ->(xs) {
+        xs.length == 1 ? xs : [xs[-1]] + _reverse.(xs[0...-1])
+      }
+
       ->(*args) {
-        f.(*reverse.(args))
+        f.(*_reverse.(args))
       }
     }
   end

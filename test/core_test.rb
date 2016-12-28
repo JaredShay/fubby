@@ -127,4 +127,18 @@ module Test
       assert_equal 11, f.(2)
     end
   end
+
+  class FlipTest < MiniTest::Test
+    def test_flip_with_one_args
+      f = T.flip.(->(x) { x })
+
+      assert_equal f.(1), 1
+    end
+
+    def test_flip_with_two_args
+      f = T.flip.(->(x, y) { x - y })
+
+      assert_equal f.(2, 4), 2
+    end
+  end
 end
