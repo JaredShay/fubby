@@ -41,12 +41,12 @@ module Core
 
   # compose :: [(a -> b)] -> (a -> b)
   def compose
-    ->(*fs) {
-      _compose = ->(x, *fs) {
-        fs.length == 1 ? fs[0].(x) : fs[0].(_compose.(x, *fs[1..-1]))
+    ->(fs) {
+      _compose = ->(*x, fs) {
+        fs.length == 1 ? fs[0].(*x) : fs[0].(_compose.(*x, fs[1..-1]))
       }
 
-      ->(x) { _compose.(x, *fs) }
+      ->(*x) { _compose.(*x, fs) }
     }
   end
 

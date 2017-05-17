@@ -110,21 +110,27 @@ module Test
 
   class ComposeTest < MiniTest::Test
     def test_composing_a_single_function
-      f = T.compose.(->(x) { x })
+      f = T.compose.([->(x) { x }])
 
       assert_equal 'x', f.('x')
     end
 
     def test_composing_two_functions
-      f = T.compose.(->(x) { x + 1 }, ->(x) { x * 2 })
+      f = T.compose.([->(x) { x + 1 }, ->(x) { x * 2 }])
 
       assert_equal 5, f.(2)
     end
 
     def test_composing_three_functions
-      f = T.compose.(->(x) { x + 1 }, ->(x) { x * 2 }, ->(x) { x + 3 })
+      f = T.compose.([->(x) { x + 1 }, ->(x) { x * 2 }, ->(x) { x + 3 }])
 
       assert_equal 11, f.(2)
+    end
+
+    def test_composing_a_function_with_2_args
+      f = T.compose.([->(x, y) { x + y }])
+
+      assert_equal 3, f.(1, 2)
     end
   end
 
