@@ -15,9 +15,47 @@ module Core
     }
 
     ->(f) {
-      ->(*xs) {
-        f.arity == xs.length ? f.(*xs) : _curry.(f, *xs)
-      }
+      if f.arity == 0
+        ->() {
+          f.call()
+        }
+      elsif f.arity == 1
+        ->(x = nil) {
+          if x.nil?
+            _curry.call(f)
+          else
+            f.call(x)
+          end
+        }
+      elsif f.arity == 2
+        ->(x = nil, y = nil) {
+          if y.nil?
+            if x.nil?
+              _curry.call(f)
+            else
+              _curry.call(f, x)
+            end
+          else
+            f.call(x, y)
+          end
+        }
+      elsif f.arity == 3
+        ->(x = nil, y = nil, z = nil) {
+          if z.nil?
+            if y.nil?
+              if x.nil?
+                _curry.call(f)
+              else
+                _curry.call(f, x)
+              end
+            else
+              _curry.call(f, x, y)
+            end
+          else
+            f.call(x, y, z)
+          end
+        }
+      end
     }
   end
 
