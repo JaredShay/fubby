@@ -3,22 +3,22 @@ require_relative './core'
 module Math
   C = Class.new { extend Core }
 
-  # add :: Fixnum -> Fixnum -> Fixnum
+  # add :: Int -> Int -> Int
   def add
     C.curry.(->(x, y) { x + y })
   end
 
-  # subtract :: Fixnum -> Fixnum -> Fixnum
+  # subtract :: Int -> Int -> Int
   def subtract
     C.curry.(->(x, y) { x - y })
   end
 
-  # multiply :: Fixnum -> Fixnum -> Fixnum
+  # multiply :: Int -> Int -> Int
   def multiply
     C.curry.(->(x, y) { x * y })
   end
 
-  # divide :: Fixnum -> Fixnum -> Fixnum
+  # divide :: Int -> Int -> Int
   def divide
     C.curry.(->(x, y) { x / y })
   end
