@@ -1,26 +1,15 @@
 require_relative './core.rb'
-require_relative './array_utils.rb'
 
 module StdLib
   C = Class.new { extend Core }
   private_constant :C
-
-  A = Class.new { extend ArrayUtils }
-  private_constant :A
-
-  # length :: [a] -> Number
-  def length
-    ->(xs) {
-      C.fold.(0, ->(acc, _) { acc + 1 }, xs)
-    }
-  end
 
   # map :: (a -> b) -> [a] -> [b]
   def map
     C.curry.(
       ->(f, xs) {
         _f = ->(acc, x) {
-          A.concat.(acc, [f.(x)])
+          concat.(acc, [f.(x)])
         }
 
         C.fold.([], _f, xs)
@@ -33,7 +22,7 @@ module StdLib
     C.curry.(
       ->(f, xs) {
         _f = ->(acc, x) {
-          f.(x) == true ? A.concat.(acc, [x]) : acc
+          f.(x) == true ? concat.(acc, [x]) : acc
         }
 
         C.fold.([], _f, xs)
@@ -68,20 +57,43 @@ module StdLib
     )
   end
 
-  # head :: [a] -> a
-  def head
-    ->(xs) { xs[0] }
+  # concat :: [a] -> [a] -> [a]
+  def concat
+    ->(a1, a2) { a1 + a2 }
+  end
+
+  # length :: [a] -> Number
+  def length
+    ->(xs) {
+      C.fold.(0, ->(acc, _) { acc + 1 }, xs)
+    }
   end
 
   # reverse :: [a] -> [a]
   def reverse
     ->(xs) {
-      length.(xs) <= 1 ? xs : A.concat.(reverse.(xs[1..-1]), [head.(xs)])
+      length.(xs) <= 1 ? xs : concat.(reverse.(xs[1..-1]), [head.(xs)])
     }
+  end
+
+  # head :: [a] -> a
+  def head
+    ->(xs) { xs[0] }
   end
 
   # tail :: [a] -> a
   def tail
     C.compose.(head, reverse)
+  end
+
+  # take :: [a] -> [a]
+  def take
+    _take = ->(n, xs, acc) {
+      acc.length == n ? acc : _take.(n, tail.(xs), concat.(acc, head.(xs))
+    }
+
+    C.curry.(
+      ->(n, xs) { _take.(n, xs, []) }
+    )
   end
 end

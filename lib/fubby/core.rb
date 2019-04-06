@@ -32,7 +32,7 @@ module Core
     })
   end
 
-  # fold :: a, (b -> a), [b] -> a
+  # fold :: a -> (b -> a), [b] -> a
   def fold
     curry.(->(acc, f, xs) {
       xs == [] ? acc : reduce.(f, [acc] + xs)
